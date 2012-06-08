@@ -1,0 +1,3 @@
+emma_src = emma-resources.c emma-rest.c emma-shell.c emma-util.c emma-vm.c emma-agent.c emma-rest-client.c 
+
+

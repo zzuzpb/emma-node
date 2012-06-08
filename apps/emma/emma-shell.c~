@@ -1,0 +1,69 @@
+#ifdef EMMA_SHELL 
+
+#include "contiki.h"
+#include "shell.h"
+#include "serial-shell.h"
+#include "emma-rest.h"
+
+/***********************************************************/
+/* GET */
+/***********************************************************/
+PROCESS(emma_shell_get_process, "GET");
+SHELL_COMMAND(emma_shell_get_command,
+	      "GET",
+	      "GET: get ressource value",
+	      &emma_shell_get_process);
+
+void 
+emma_shell_get_usage(){
+	shell_output_str(&emma_shell_get_command, "USAGE: ", "GET URI");
+	}
+
+PROCESS_THREAD(emma_shell_get_process, ev, data)
+{
+  PROCESS_BEGIN();
+  int i=0;
+  char * tmp = strtok(data," ");
+  
+  if(tmp == NULL){
+  	emma_shell_get_usage(); 
+  	return;
+  	}
+  
+	resource_t * r = rest_get_resource(tmp);
+  if(r == NULL) {
+  	shell_output_str(&emma_shell_get_command, "ERROR :", "404 not found");
+  	}
+  else {
+  	shell_output_str(&emma_shell_get_command, "", rest_get_user_data(r));
+  	}
+
+
+	PROCESS_END();
+	}
+/***********************************************************/
+void
+emma_shell_init(void){
+	serial_line_init();
+	serial_shell_init();
+
+	shell_base64_init();
+	shell_blink_init();
+	/*shell_coffee_init();*/
+	shell_netfile_init();
+	shell_ping_init();
+	shell_power_init();
+	/*shell_profile_init();*/
+	shell_ps_init();
+	shell_reboot_init();
+	/*shell_rsh_init();*/
+	shell_run_init();
+	shell_text_init();
+	shell_time_init();
+	shell_udpsend_init();
+	shell_vars_init();
+  
+	shell_register_command(&emma_shell_get_command);
+}
+
+#endif
